@@ -21,7 +21,7 @@ A flexible, schema-driven form validation composable for Vue 3 using **Valibot**
 * `schema: MaybeRefOrGetter<TSchema>`
   A Valibot schema (`BaseSchema` or `BaseSchemaAsync`) defining the structure and rules for validation.
 
-* `data: MaybeRefOrGetter<InferInput<TSchema>>`
+* `data: MaybeRefOrGetter<Record<string, unknown>>`
   The reactive object that holds the form data to be validated.
 
 #### Returns

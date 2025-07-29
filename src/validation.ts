@@ -30,7 +30,7 @@ const getKeysFromObject = (obj: unknown, prefix = ''): string[] => {
 
 export const useValidationKey = (obj: unknown) => getKeysFromObject(obj);
 
-export const useValidation = <TSchema extends CustomSchema>(schema: MaybeRefOrGetter<TSchema>, data: MaybeRefOrGetter<InferInput<TSchema>>) => {
+export const useValidation = <TSchema extends CustomSchema>(schema: MaybeRefOrGetter<TSchema>, data: MaybeRefOrGetter<Record<string, unknown>>) => {
 	const silentErrors = ref<FlatErrors<TSchema>>();
 	const output = ref<InferOutput<TSchema>>();
 	const dirtyFields = ref<string[]>([]);
