@@ -1,0 +1,47 @@
+{
+  "name": "@adbros/vue-validation",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Composable for schema-based form validation in Vue 3 using Valibot",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts",
+    "dev": "tsup src/index.ts --watch --format esm --dts",
+    "lint": "eslint src --ext .ts",
+    "release": "bumpp && npm publish"
+  },
+  "keywords": [
+    "vue",
+    "validation",
+    "valibot",
+    "form",
+    "composable",
+    "vue3"
+  ],
+  "author": "Adbros",
+  "license": "MIT",
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "devDependencies": {
+    "@adbros/eslint-config": "^3.0.0-beta.1",
+    "bumpp": "^10.2.0",
+    "eslint": "^9.32.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3",
+    "vue": "^3.5.18"
+  },
+  "dependencies": {
+    "radash": "^12.1.1",
+    "valibot": "^1.1.0"
+  }
+}
