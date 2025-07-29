@@ -21,21 +21,16 @@ A flexible, schema-driven form validation composable for Vue 3 using **Valibot**
 * `schema: MaybeRefOrGetter<TSchema>`
   A Valibot schema (`BaseSchema` or `BaseSchemaAsync`) defining the structure and rules for validation.
 
-* `data: MaybeRefOrGetter<Record<string, unknown>>`
+* `data: MaybeRefOrGetter<InferInput<TSchema>>`
   The reactive object that holds the form data to be validated.
 
 #### Returns
 
 ```ts
 {
-  validate: () => Promise<SafeParseReturn<TSchema>>;
   handleSubmit: (onSubmit, onError?) => Promise<void>;
   errors: ComputedRef<Record<string, string>>;
-  silentErrors: Ref<FlatErrors<TSchema> | undefined>;
   output: Ref<InferOutput<TSchema> | undefined>;
-
-  dirtyFields: Ref<string[]>;
-  validDirtyFields: Ref<string[]>;
 
   makeFieldDirty: (name: string) => void;
   cleanField: (name: string) => void;
@@ -46,8 +41,12 @@ A flexible, schema-driven form validation composable for Vue 3 using **Valibot**
   clearCustomError: (field: string) => void;
   clearAllCustomErrors: () => void;
 
+  validate: () => Promise<SafeParseReturn<TSchema>>;
+  silentErrors: Ref<FlatErrors<TSchema> | undefined>;
   isDirty: (name: string) => boolean;
   isFormValid: ComputedRef<boolean>;
+  dirtyFields: Ref<string[]>;
+  validDirtyFields: Ref<string[]>;
 }
 ```
 
@@ -56,26 +55,8 @@ A flexible, schema-driven form validation composable for Vue 3 using **Valibot**
 ## 🧠 Behavior Summary
 
 * **Validation**: Runs automatically on schema/data changes and can be manually triggered via `validate()`.
-* **Dirty tracking**: Tracks which fields have been interacted with via `makeFieldDirty()`, `makeFormDirty()` and `cleanField()`.
+* **Dirty tracking**: Optionally tracks which fields have been interacted with via `makeFieldDirty()`, `makeFormDirty()` and `cleanField()`.
 * **Custom errors**: Allows adding external (non-schema) validation messages using `setCustomError()` etc.
-* **Output**: On success, `output.value` contains the parsed, typed data from Valibot.
-
----
-
-## 📦 Utility Functions
-
-### 🔹 `useValidationKey(obj: unknown): string[]`
-
-Traverses a deeply nested object (including objects in arrays) and returns a flat list of dot-notated field keys.
-
-**Example output:**
-
-```ts
-const obj = { user: { name: '', address: { street: '' } } };
-// → ["user.name", "user.address.street"]
-```
-
----
 
 ## 🔸 Key Concepts
 
@@ -115,23 +96,68 @@ await handleSubmit(
 
 ## ✏️ Example Usage
 
-```ts
-const schema = v.object({
-  name: string(),
-  email: string([ minLength(5), pattern(/@/) ]),
-});
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import * as v from 'valibot'
+import { useValidation } from '@adbros/vue-validation'
 
-const formData = ref({ name: '', email: '' });
+const schema = v.object({
+  username: v.pipe(
+    v.string(),
+    v.nonEmpty('Zadejte uživatelské jméno.')
+  ),
+  password: v.pipe(
+    v.string(),
+    v.nonEmpty('Zadejte heslo.')
+  ),
+})
+
+const form = ref({
+  username: '',
+  password: '',
+})
 
 const {
   errors,
-  handleSubmit,
   makeFieldDirty,
-} = useValidation(schema, formData);
+  handleSubmit,
+} = useValidation(schema, form)
 
-const onSubmit = async (data) => {
-  console.log('Valid form submission', data);
-};
+const submitForm = handleSubmit(
+  (values) => {
+    console.log('Success:', values);
+  },
+  () => {
+    console.warn('Form has errors', errors.value)
+  }
+)
+</script>
+
+<template>
+  <form @submit.prevent="submitForm">
+    <label>
+      Uživatelské jméno
+      <input
+        v-model="form.username"
+        @blur="makeFieldDirty('username')"
+      />
+      <span class="error" v-if="errors.username">{{ errors.username }}</span>
+    </label>
+
+    <label>
+      Heslo
+      <input
+        type="password"
+        v-model="form.password"
+        @blur="makeFieldDirty('password')"
+      />
+      <span class="error" v-if="errors.password">{{ errors.password }}</span>
+    </label>
+
+    <button type="submit">Přihlásit se</button>
+  </form>
+</template>
 ```
 
 ---

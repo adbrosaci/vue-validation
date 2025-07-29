@@ -37,7 +37,8 @@
   "author": "Adbros",
   "license": "MIT",
   "peerDependencies": {
-    "vue": "^3.0.0"
+    "vue": "^3.0.0",
+    "valibot": "^1.0.0"
   },
   "devDependencies": {
     "@adbros/eslint-config": "^3.0.0-beta.1",
@@ -48,7 +49,6 @@
     "vue": "^3.5.18"
   },
   "dependencies": {
-    "radash": "^12.1.1",
-    "valibot": "^1.1.0"
+    "radash": "^12.1.1"
   }
 }
