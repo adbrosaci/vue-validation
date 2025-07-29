@@ -2,6 +2,9 @@
   "name": "@adbros/vue-validation",
   "version": "0.1.0",
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Composable for schema-based form validation in Vue 3 using Valibot",
   "types": "dist/index.d.ts",
   "exports": {
@@ -13,6 +16,10 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adbrosaci/vue-validation.git"
+  },
   "scripts": {
     "build": "tsup src/index.ts --format esm --dts",
     "dev": "tsup src/index.ts --watch --format esm --dts",
